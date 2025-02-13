@@ -85,13 +85,63 @@
 }
 
 /* Dropdown Styling */
+/* Style the dropdown container */
 .redirect-type {
     width: 100%;
-    padding: 6px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 10px;
+    border: 1px solid #1E88E5; /* Modern blue border */
+    border-radius: 6px;
+    background: white;
     font-size: 14px;
+    color: #1565C0;
+    transition: all 0.3s ease-in-out;
+    appearance: none; /* Remove default system styling */
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    position: relative;
 }
+
+/* Custom arrow instead of the default system dropdown arrow */
+.redirect-type {
+    background-position: right 10px center;
+    background-size: 14px;
+    padding-right: 30px; /* Ensure space for custom arrow */
+}
+
+/* Dropdown hover effect */
+.redirect-type:hover {
+    border-color: #1565C0;
+}
+
+/* When focused (clicked), add glow effect */
+.redirect-type:focus {
+    outline: none;
+    border-color: #0D47A1;
+    box-shadow: 0 0 10px rgba(13, 71, 161, 0.2);
+}
+
+/* Dropdown options styling */
+.redirect-type option {
+    background: white;
+    color: #1565C0;
+    font-size: 14px;
+    padding: 10px;
+}
+
+/* Style the dropdown when open (Chrome/Edge fix) */
+.redirect-type::-ms-expand {
+    display: none; /* Hide default arrow in Edge */
+}
+
+/* On mobile, make it more user-friendly */
+@media (max-width: 768px) {
+    .redirect-type {
+        font-size: 16px;
+        padding: 12px;
+    }
+}
+
 
 /* Checkbox styling */
 #redirects-table td input[type="checkbox"] {
@@ -179,10 +229,10 @@ button:hover {
 
 button.remove-row {
     cursor: pointer;
-    padding: 8px 15px;
+    padding: 8px 10px;
     border: none;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 10px;
     font-weight: bold;
     color: #fff;
     background: linear-gradient(to right, #f87272, #e01616);
@@ -203,7 +253,7 @@ button.remove-row:hover {
     padding: 8px 15px;
     border: none;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 11px;
     font-weight: bold;
     color: #fff;
     background: linear-gradient(to right, #1E88E5, #1565C0);
@@ -224,7 +274,7 @@ button.remove-row:hover {
     padding: 8px 15px;
     border: none;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 11px;
     font-weight: bold;
     color: #fff;
     background: linear-gradient(to right, #1ee561, #21c015);
