@@ -56,6 +56,7 @@ function redirect_manager_create_analytics_table() {
     dbDelta($sql);
 }
 
+//Export as CSV 
 add_action('admin_post_redirect_manager_export_csv', function () {
     if (!isset($_POST['redirect_manager_export_csv_nonce_field']) || 
         !wp_verify_nonce($_POST['redirect_manager_export_csv_nonce_field'], 'redirect_manager_export_csv_nonce')) {
@@ -68,7 +69,7 @@ add_action('admin_post_redirect_manager_export_csv', function () {
 
     global $wpdb;
     $analytics_table = $wpdb->prefix . 'redirect_manager_analytics';
-    $analytics_data = $wpdb->get_results("SELECT * FROM $analytics_table");
+    $analytics_data = $wpdb->get_results("SELECT * FROM $analytics_table", ARRAY_A);
 
     if (!empty($analytics_data)) {
         // Clean output buffer
@@ -76,29 +77,35 @@ add_action('admin_post_redirect_manager_export_csv', function () {
             ob_end_clean();
         }
 
-        // Set headers for CSV download
-        header('Content-Type: text/csv; charset=utf-8');
+        // Set headers for CSV download with UTF-8 encoding
+        header('Content-Type: text/csv; charset=UTF-8');
         header('Content-Disposition: attachment; filename="redirect_analytics.csv"');
+        header("Pragma: no-cache");
+        header("Expires: 0");
 
         // Open output stream
         $output = fopen('php://output', 'w');
 
-        // Add CSV headers
-        fputcsv($output, ['Redirect From', 'Redirect To', 'Hit Count', 'Last Accessed']);
+        // Set delimiter (force semicolon for Excel compatibility)
+        $delimiter = ";";
 
-        // Add rows to the CSV
-        foreach ($analytics_data as $data) {
+        // Add UTF-8 BOM to prevent Excel encoding issues
+        fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
+
+        // Write CSV Headers Properly
+        fputcsv($output, ['Redirect From', 'Redirect To', 'Hit Count', 'Last Accessed'], $delimiter);
+
+        // Write Each Row Properly into Separate Columns
+        foreach ($analytics_data as $row) {
             fputcsv($output, [
-                $data->redirect_from,
-                $data->redirect_to,
-                $data->hit_count,
-                $data->last_accessed,
-            ]);
+                stripslashes($row['redirect_from']),
+                stripslashes($row['redirect_to']),
+                (int) $row['hit_count'], // Ensure hit count is an integer
+                stripslashes($row['last_accessed']),
+            ], $delimiter);
         }
 
         fclose($output);
-
-        // End script execution to avoid WordPress rendering extra output
         exit;
     } else {
         wp_die('No analytics data available for export.');
