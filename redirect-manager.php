@@ -2,7 +2,7 @@
 /*
 Plugin Name: Redirect Manager
 Description: Redirect URLs with or without query parameters, choose redirect types, check analytics, and more.
-Version: 1.0
+Version: 1.3
 Author: Razvan Faraon
 */
 
