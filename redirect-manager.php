@@ -164,3 +164,23 @@ function show_notification($message, $color = "blue") {
         });
     </script>";
 }
+
+//Hides other WP or plugin notifications from redirect manager admin page
+add_action('admin_head', function () {
+    if (isset($_GET['page']) && $_GET['page'] === 'redirect-manager') {
+        remove_all_actions('admin_notices');
+        remove_all_actions('all_admin_notices');
+    }
+});
+
+// Shows Redirect Manager in the Settings section of WP nav sidebar
+add_action('admin_menu', function () {
+    add_submenu_page(
+        'options-general.php', // Parent menu (Settings)
+        'Redirect Manager', // Page title
+        'Redirect Manager', // Menu title
+        'manage_options', // Capability (only admins can access)
+        'redirect-manager', // Slug (must match your existing page slug)
+        'redirect_manager_render_admin_page' // Callback function to render the page
+    );
+});

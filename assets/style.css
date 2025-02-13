@@ -268,3 +268,10 @@ button.remove-row:hover {
 #cancel-clear:hover {
     background: #eaeaea;
 }
+
+/* Hide admin notices only on the Redirect Manager settings page */
+body.admin_page_redirect-manager .notice,
+body.admin_page_redirect-manager .updated,
+body.admin_page_redirect-manager .error {
+    display: none !important;
+}
