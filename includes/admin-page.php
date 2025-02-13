@@ -183,7 +183,12 @@ if (!class_exists('Redirect_Manager_Functions')) {
                                                 <option value="307" <?php selected($redirect['type'], 307); ?>>307</option>
                                             </select>
                                         </td>
-                                        <td><input type="checkbox" name="redirects[<?php echo $index; ?>][regex]" value="1" <?php checked($redirect['regex'], 1); ?> /></td>
+										<td>
+											<label class="toggle-switch">
+												<input type="checkbox" name="redirects[<?php echo $index; ?>][regex]" value="1" <?php checked($redirect['regex'], 1); ?> />
+												<span class="slider"></span>
+											</label>
+										</td>
                                         <td><button type="button" class="remove-row">X</button></td>
                                     </tr>
                                     <?php
@@ -192,8 +197,10 @@ if (!class_exists('Redirect_Manager_Functions')) {
                             ?>
                         </tbody>
                     </table>
-                    <button type="button" id="add-row" class="button">+ Add Redirect</button>
-                    <?php submit_button('Save Changes'); ?>
+					<div class="button-container">
+						<button type="button" id="add-row" class="button add-redirect">+ Add Redirect</button>
+						<?php submit_button('Save Changes', 'primary', 'submit', false); ?>
+					</div>
                 </form>
 
                 <script>
@@ -215,7 +222,12 @@ if (!class_exists('Redirect_Manager_Functions')) {
                                         <option value="307">307</option>
                                     </select>
                                 </td>
-                                <td><input type="checkbox" name="redirects[${rowCount}][regex]" value="1" /></td>
+                                <td>
+									<label class="toggle-switch">
+										<input type="checkbox" name="redirects[${rowCount}][regex]" value="1" />
+										<span class="slider"></span>
+									</label>
+								</td>
                                 <td><button type="button" class="remove-row">X</button></td>
                             `;
                             table.appendChild(newRow);
@@ -241,8 +253,8 @@ if (!class_exists('Redirect_Manager_Functions')) {
 					<button type="submit" class="export-button">Export as CSV</button>
 				</form>
 
-                <table class="widefat">
-                    <thead>
+                <table class="widefat" id="analyitics-table">
+                    <thead id="analytics-table-head">
                         <tr>
                             <th>Redirect From</th>
                             <th>Redirect To</th>

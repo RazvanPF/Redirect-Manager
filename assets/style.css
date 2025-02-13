@@ -29,9 +29,12 @@
 }
 
 #redirects-table thead {
-    background-color: #0073aa;
+    background: linear-gradient(to right, #1E88E5, #1565C0);
     color: #fff;
     font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+	font-size: 14px !important; 
 }
 
 #redirects-table th,
@@ -40,6 +43,7 @@
     border: 1px solid #ddd;
     text-align: left;
     vertical-align: middle;
+	font-size: 14px !important; 
 }
 
 /* Adjust column widths */
@@ -136,91 +140,140 @@ button:hover {
 .export-button {
 	margin-top: 10px;
 	margin-bottom: 10px;
-	background-color: transparent;
-    border: 1px solid;
-    border-radius: 5px;
-    border-color: #28a745;
-    color: #28a745;
+    cursor: pointer;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(to right, #1ee561, #21c015);
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
 
 .clear-button {
-	background-color: transparent;
-    border: 1px solid;
-    border-radius: 5px;
-    border-color: #d61c1c;
-    color: #d61c1c;
+    cursor: pointer;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(to right, #f87272, #e01616);
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
 
 .clear-button:hover {
-	background-color: #d61c1c;
-	color: #fff;
+    background: #8d0000;
+    transform: scale(1.05);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
 }
 
 .export-button:hover {
-    background-color: #005177;
-	color: #fff;
+    background: #0a9400;
+    transform: scale(1.05);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
 }
 
 button.remove-row {
-    background-color: #dc3232;
+    cursor: pointer;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(to right, #f87272, #e01616);
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
 
 button.remove-row:hover {
-    background-color: #a80000;
+    background: #8d0000;
+    transform: scale(1.05);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
 }
 
 #add-row {
-	background-color: transparent;
-    border: 1px solid;
     margin-top: 30px;
     margin-bottom: -10px;
-    border-radius: 5px;
-    border-color: #28a745;
-    color: #28a745;
+    cursor: pointer;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(to right, #1E88E5, #1565C0);
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
 
 #add-row:hover {
-    background-color: #1c7c2f;
-	color: #fff;
+    background: #0D47A1;
+    transform: scale(1.05);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
 }
 
-.submit .button-primary {
-    background-color: #0073aa;
-    border-radius: 4px;
+#submit {
+	margin-top: 30px;
+	margin-bottom: -10px;
+    cursor: pointer;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(to right, #1ee561, #21c015);
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
 
-.submit .button-primary:hover {
-    background-color: #005177;
+#submit:hover {
+    background: #0a9400;
+    transform: scale(1.05);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
 }
 
 /* Tab Navigation */
 .nav-tab-wrapper {
     margin-bottom: 20px;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 2px solid #1565C0;
 }
 
 .nav-tab {
     text-decoration: none;
-    padding: 10px 20px;
+    padding: 12px 25px;
     margin-right: 5px;
-    border: 1px solid #ccc;
-    border-bottom: none;
-    background: #f1f1f1;
-    color: #555;
+    border: 2px solid transparent;
+    background: #F5F5F5;
+    color: #1565C0;
     font-size: 14px;
-    transition: background-color 0.3s, color 0.3s;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    border-radius: 6px 6px 0 0;
 }
 
 .nav-tab-active {
-    background: #fff;
-    color: #0073aa;
+    background: linear-gradient(to right, #1E88E5, #1565C0);
+    color: #ffffff;
     font-weight: bold;
-    border-bottom: 1px solid #fff;
+    border-bottom: 2px solid white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 .nav-tab:hover {
-    background: #e1e1e1;
-    color: #0073aa;
+    background: #E3F2FD;
+    color: #1565C0;
+}
+
+/* Prevent hover effect on active tab */
+.nav-tab-active:hover {
+    background: linear-gradient(to right, #1E88E5, #1565C0);
+    color: #ffffff;
 }
 
 /* General tab content */
@@ -274,4 +327,119 @@ body.admin_page_redirect-manager .notice,
 body.admin_page_redirect-manager .updated,
 body.admin_page_redirect-manager .error {
     display: none !important;
+}
+
+#analytics-table-head {
+    background: linear-gradient(to right, #1E88E5, #1565C0);
+    color: #fff;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+	border-collapse: collapse;
+}
+
+#analyitics-table {
+	width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* Ensures columns adhere to specified widths */
+    margin-bottom: 20px;
+	margin-top: 10px;
+}
+
+#analyitics-table th,
+#analyitics-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.widefat thead tr th {
+	color: #fff;
+}
+
+/* Adjust column widths */
+#analyitics-table th:first-child,
+#analyitics-table td:first-child,
+#analyitics-table th:nth-child(2),
+#analyitics-table td:nth-child(2) {
+    width: 30%; /* Adjust column widths as needed */
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+#analyitics-table th:nth-child(3),
+#analyitics-table td:nth-child(3) {
+    width: 10%;
+    text-align: center;
+}
+
+#analyitics-table th:nth-child(4),
+#analyitics-table td:nth-child(4) {
+    width: 10%;
+    text-align: center;
+}
+
+/* Toggle Switch Wrapper */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+}
+
+/* Hide Default Checkbox */
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Toggle Background */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 22px;
+}
+
+/* Small Circle Inside Toggle */
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+/* When Checkbox is Checked (Active State) */
+input:checked + .slider {
+    background-color: #4CAF50;
+}
+
+/* Move the Small Circle Right */
+input:checked + .slider:before {
+    transform: translateX(18px);
+}
+
+/* Add a Glowing Effect When Active */
+input:checked + .slider {
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.6);
+}
+
+/* Align Buttons Side by Side */
+.button-container {
+    display: flex;
+    align-items: center; /* Align vertically */
+    gap: 10px; /* Space between buttons */
+    margin-top: 20px;
 }
