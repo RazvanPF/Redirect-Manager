@@ -41,8 +41,9 @@ if (!class_exists('Redirect_Manager_Functions')) {
 
             update_option('redirect_manager_redirects', $filtered_redirects);
 			
-			// Show notification after saving
-    		show_notification('Changes saved successfully!', 'green');
+			// Add the refresh=1 parameter to the URL to trigger a fast auto-refresh
+			wp_redirect(admin_url('options-general.php?page=redirect-manager&tab=general&refresh=1'));
+			exit;
         }
 
         public function handle_redirects() {
@@ -153,8 +154,26 @@ if (!class_exists('Redirect_Manager_Functions')) {
                 <a href="?page=redirect-manager&tab=general" class="nav-tab <?php echo $active_tab === 'general' ? 'nav-tab-active' : ''; ?>">General</a>
                 <a href="?page=redirect-manager&tab=analytics" class="nav-tab <?php echo $active_tab === 'analytics' ? 'nav-tab-active' : ''; ?>">Analytics</a>
             </h2>
-
             <?php if ($active_tab === 'general') : ?>
+			<!-- IMPORT & EXPORT BUTTONS HERE -->
+				<div class="redirect-buttons-general">
+					
+					<!-- Export Redirects Button -->
+					<form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+						<?php wp_nonce_field('redirect_manager_export_redirects_nonce', 'redirect_manager_export_redirects_nonce_field'); ?>
+						<input type="hidden" name="action" value="redirect_manager_export_redirects">
+						<button type="submit" class="export-redirects-button">Export CSV</button>
+					</form>
+
+					<!-- Import Redirects Button -->
+					<button type="button" class="import-redirects-button" onclick="document.getElementById('import-redirects-file').click()"> Import CSV</button>
+					<form method="post" enctype="multipart/form-data" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" style="display: none;">
+						<?php wp_nonce_field('redirect_manager_import_redirects_nonce', 'redirect_manager_import_redirects_nonce_field'); ?>
+						<input type="hidden" name="action" value="redirect_manager_import_redirects">
+						<input type="file" id="import-redirects-file" name="redirects_csv" accept=".csv" style="display: none;" onchange="this.form.submit()">
+					</form>
+				</div>
+				<!-- REDIRECTS TABLE STARTS HERE -->
                 <form method="post" action="">
                     <?php wp_nonce_field('save_redirects', 'redirect_manager_nonce'); ?>
                     <table id="redirects-table">
@@ -250,7 +269,9 @@ if (!class_exists('Redirect_Manager_Functions')) {
 				<form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
 					<?php wp_nonce_field('redirect_manager_export_csv_nonce', 'redirect_manager_export_csv_nonce_field'); ?>
 					<input type="hidden" name="action" value="redirect_manager_export_csv">
-					<button type="submit" class="export-button">Export as CSV</button>
+					<div class = "export-analytics">
+						<button type="submit" class="export-button">⤵ Export CSV</button>
+					</div>
 				</form>
 
                 <table class="widefat" id="analyitics-table">
@@ -365,6 +386,22 @@ if (!class_exists('Redirect_Manager_Functions')) {
 							form.submit();
 						});
 					});
+						//Additional Refresh for fixing layout
+						document.addEventListener("DOMContentLoaded", function () {
+							const urlParams = new URLSearchParams(window.location.search);
+
+							if (urlParams.get("refresh") === "1") {
+								console.log("🔄 Auto-refreshing after Save Changes...");
+
+								// Remove the refresh=1 parameter to prevent infinite reloads
+								urlParams.delete("refresh");
+								const newUrl = window.location.pathname + "?" + urlParams.toString();
+
+								// Perform a fast, seamless refresh
+								window.history.replaceState(null, "", newUrl);
+								location.reload();
+							}
+						});
 				</script>
             <?php endif; ?>
         </div>

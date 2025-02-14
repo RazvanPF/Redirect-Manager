@@ -56,7 +56,7 @@ function redirect_manager_create_analytics_table() {
     dbDelta($sql);
 }
 
-//Export as CSV 
+//Export as CSV ANALYTICS
 add_action('admin_post_redirect_manager_export_csv', function () {
     if (!isset($_POST['redirect_manager_export_csv_nonce_field']) || 
         !wp_verify_nonce($_POST['redirect_manager_export_csv_nonce_field'], 'redirect_manager_export_csv_nonce')) {
@@ -111,6 +111,116 @@ add_action('admin_post_redirect_manager_export_csv', function () {
         wp_die('No analytics data available for export.');
     }
 });
+
+// EXPORT CSV REDIRECTS
+add_action('admin_post_redirect_manager_export_redirects', function () {
+    if (!isset($_POST['redirect_manager_export_redirects_nonce_field']) || 
+        !wp_verify_nonce($_POST['redirect_manager_export_redirects_nonce_field'], 'redirect_manager_export_redirects_nonce')) {
+        wp_die('Invalid nonce.');
+    }
+
+    if (!current_user_can('manage_options')) {
+        wp_die('You do not have permission to perform this action.');
+    }
+
+    global $wpdb;
+    $redirects = get_option('redirect_manager_redirects', []);
+
+    if (!empty($redirects)) {
+        // Clean output buffer
+        if (ob_get_length()) {
+            ob_end_clean();
+        }
+
+        // Set headers for CSV download with UTF-8 encoding
+        header('Content-Type: text/csv; charset=UTF-8');
+        header('Content-Disposition: attachment; filename="redirects_list.csv"');
+        header("Pragma: no-cache");
+        header("Expires: 0");
+
+        // Open output stream
+        $output = fopen('php://output', 'w');
+
+        // Set delimiter (semicolon for Excel compatibility)
+        $delimiter = ";";
+
+        // Add UTF-8 BOM to prevent Excel encoding issues
+        fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
+
+        // Write CSV Headers
+        fputcsv($output, ['Redirect From', 'Redirect To', 'Redirect Type', 'Regex'], $delimiter);
+
+        // Write Each Redirect Entry as a Row
+        foreach ($redirects as $redirect) {
+            fputcsv($output, [
+                stripslashes($redirect['from']),
+                stripslashes($redirect['to']),
+                (int) $redirect['type'], // Ensure redirect type is an integer (301, 302, etc.)
+                $redirect['regex'] ? 'Yes' : 'No', // Convert regex to human-readable "Yes" or "No"
+            ], $delimiter);
+        }
+
+        fclose($output);
+        exit;
+    } else {
+        wp_die('No redirects available for export.');
+    }
+});
+
+//IMPORT REDIRECTS
+add_action('admin_post_redirect_manager_import_redirects', function () {
+    if (!isset($_POST['redirect_manager_import_redirects_nonce_field']) || 
+        !wp_verify_nonce($_POST['redirect_manager_import_redirects_nonce_field'], 'redirect_manager_import_redirects_nonce')) {
+        wp_die('Invalid nonce.');
+    }
+
+    if (!current_user_can('manage_options')) {
+        wp_die('You do not have permission to perform this action.');
+    }
+
+    // Check if a file was uploaded
+    if (!isset($_FILES['redirects_csv']) || $_FILES['redirects_csv']['error'] !== UPLOAD_ERR_OK) {
+        wp_die('File upload failed. Please try again.');
+    }
+
+    $file = $_FILES['redirects_csv']['tmp_name'];
+
+    // Open the CSV file
+    if (($handle = fopen($file, 'r')) !== false) {
+        $redirects = [];
+        $delimiter = ";"; // Ensure the same delimiter as in the export
+
+        // Skip the header row
+        fgetcsv($handle, 1000, $delimiter);
+
+        // Read each row
+        while (($data = fgetcsv($handle, 1000, $delimiter)) !== false) {
+            if (count($data) < 4) continue; // Skip incomplete rows
+
+            $redirects[] = [
+                'from'  => esc_url_raw(trim($data[0])),
+                'to'    => esc_url_raw(trim($data[1])),
+                'type'  => in_array((int) $data[2], [301, 302, 307]) ? (int) $data[2] : 301, // Default to 301 if invalid
+                'regex' => strtolower(trim($data[3])) === 'yes' ? 1 : 0, // Convert "Yes"/"No" to 1/0
+            ];
+        }
+        fclose($handle);
+
+        // Save to WordPress options
+        if (!empty($redirects)) {
+            update_option('redirect_manager_redirects', $redirects);
+        }
+
+        // Redirect with success flag
+        wp_redirect(admin_url('options-general.php?page=redirect-manager&tab=general&import_status=success'));
+        exit;
+    } else {
+        // Redirect with error flag
+        wp_redirect(admin_url('options-general.php?page=redirect-manager&tab=general&import_status=invalid_csv'));
+        exit;
+    }
+});
+
 
 	// Clear analytics table 
 	add_action('admin_post_redirect_manager_clear_analytics', function () {

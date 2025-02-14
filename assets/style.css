@@ -197,7 +197,7 @@ button:hover {
     font-size: 14px;
     font-weight: bold;
     color: #fff;
-    background: linear-gradient(to right, #1ee561, #21c015);
+    background: linear-gradient(to right, #4CAF50, #388E3C);
     transition: all 0.3s ease-in-out;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
@@ -491,5 +491,40 @@ input:checked + .slider {
     display: flex;
     align-items: center; /* Align vertically */
     gap: 10px; /* Space between buttons */
-    margin-top: 20px;
+
+}
+
+/* Styling for Import & Export Buttons */
+.redirect-buttons-general {
+    display: flex !important;
+    justify-content: flex-end !important; /* Force it */
+    align-items: center !important;
+    gap: 15px;
+    margin: 10px 0; /* Prevent margin collapse */
+    min-height: 45px; /* Ensures enough space */
+}
+
+/* Export Redirects Button */
+.export-redirects-button,
+.import-redirects-button {
+    min-width: 100px;
+    height: 28px; /* Standard height */
+    text-align: center;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box; /* Prevents overflow */
+    margin: 0 !important; /* Prevent any shifting */
+	background: linear-gradient(to right, #1ee561, #21c015);
+}
+
+/* Button Hover Effect */
+.export-redirects-button:hover, .import-redirects-button:hover {
+    background: #0D47A1;
+}
+
+.export-analytics {
+	display: flex;
+	justify-content: flex-end;
 }

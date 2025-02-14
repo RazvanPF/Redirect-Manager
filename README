@@ -1,73 +1,93 @@
-# 🚀 Redirect Manager - WordPress Plugin
+# Redirect Manager - WordPress Plugin
 
-### **Version:** 1.0  
-### **Author:** Razvan Faraon  
-### **License:** GPL v2 or later  
----
-## 📌 **About the Plugin**
-Redirect Manager is a WordPress plugin that allows users to **create, manage, and analyze URL redirects**. Unlike most redirection plugins, it **fully supports query parameters**, allowing advanced redirect handling without needing to modify `.htaccess` files.
-
-With built-in analytics, users can track redirect hits and export reports in **CSV format**.
+### Version: 1.3  
+### Author: Razvan Faraon  
+### License: GPL v2 or later  
 
 ---
 
-## ✨ **Features**
-✅ **Add, Edit, and Remove Redirects**  
-✅ **Supports Query Parameter Redirections**  
-✅ **Redirect Types:** 301, 302, 307  
-✅ **Analytics Tracking** (Hit Counts & Last Accessed Time)  
-✅ **Export Analytics Data as CSV**  
-✅ **Clear Analytics Data**  
-✅ **User-friendly Interface & Styling**  
+## About the Plugin
+
+Redirect Manager is a comprehensive WordPress plugin that allows users to create, manage, and analyze URL redirects. Unlike traditional redirection plugins, it fully supports query parameters, enabling advanced redirect handling without modifying `.htaccess` files.
+
+With built-in analytics, users can track redirect hits, export reports in CSV format, and import/export redirects for easier management.
 
 ---
 
-## 📂 **Repository Contents**
+## Features
+
+- Add, Edit, and Remove Redirects  
+- Supports Query Parameter Redirections  
+- Redirect Types: 301, 302, 307  
+- Analytics Tracking (Hit Counts & Last Accessed Time)  
+- Export Analytics Data as CSV  
+- Import/Export Redirects as CSV  
+- Clear Analytics Data  
+- Toggle Regex Support with a Modern UI  
+- User-friendly Interface & Styling  
+- Custom Admin Notifications  
+
+---
+
+## Repository Contents
+
 This repository contains:
-- **Full Plugin Code** - Editable files for customization.
-- **`Redirect Manager Plugin.zip`** - Ready-to-install version for direct WordPress installation.
 
-**🔹 Options for Users:**
+- Full Plugin Code - Editable files for customization.
+- `Redirect Manager Plugin.zip` - Ready-to-install version for direct WordPress installation.
+
+### Options for Users:
 1. **Want to install the plugin immediately?**  
-   👉 Download the **`Redirect Manager Plugin.zip`** and install it via WordPress.  
+   - Download the `Redirect Manager Plugin.zip` and install it via WordPress.  
 2. **Want to modify the plugin?**  
-   👉 Clone/download the repository, remove the `.zip` file, and make your own modifications before zipping.
+   - Clone/download the repository, remove the `.zip` file, and make your modifications before zipping.
 
 ---
 
-## 🔧 **Installation & Usage**
-### **Method 1: Installing from WordPress Dashboard**
-1. Go to **Plugins** > **Add New** > **Upload Plugin**.
+## Installation & Usage
+
+### Method 1: Installing from WordPress Dashboard
+
+1. Go to **Plugins > Add New > Upload Plugin**.
 2. Upload `Redirect Manager Plugin.zip`.
 3. Click **Install Now**, then **Activate**.
 
-### **Method 2: Manual Installation (For Developers)**
+### Method 2: Manual Installation (For Developers)
+
 1. Download or clone this repository.
-2. **(Optional)** Modify the plugin code if needed.
+2. (Optional) Modify the plugin code if needed.
 3. Delete the `.zip` file (if you plan to package your own).
 4. Compress the plugin folder into a new `.zip` file.
 5. Upload & activate via the WordPress admin panel.
 
 ---
 
-## 🛠 **How to Use**
+## How to Use
+
+### General Tab:
+
 1. Navigate to **Redirect Manager** in WordPress Admin.
-2. Under the **General Tab**:
-   - Add new redirects by specifying **From URL, To URL, Redirect Type (301/302/307), and Regex (if needed)**.
-   - Save changes.
-3. Under **Analytics Tab**:
-   - View redirect statistics.
-   - Export analytics as CSV.
-   - Clear all analytics data.
+2. Add new redirects by specifying:
+   - **From URL**
+   - **To URL**
+   - **Redirect Type (301, 302, 307)**
+   - **Regex Toggle**
+3. Save changes.
+
+### Analytics Tab:
+
+1. View redirect statistics, including hit counts and last accessed time.
+2. Export analytics data as CSV.
+3. Clear all analytics data.
+
+### Import/Export Redirects:
+
+- **Export Redirects:** Download all redirects in CSV format.
+- **Import Redirects:** Upload a CSV file to import multiple redirects at once.
 
 ---
 
-## 🔥 **Want to Contribute?**
-Feel free to open **issues**, suggest improvements, or fork the repository and submit **pull requests**. Contributions are welcome!
+## Support & Feedback
 
----
-
-## ⚡ **Support & Feedback**
 For bug reports, suggestions, or general inquiries, please open an issue in the repository.
 
-Happy redirecting! 🚀🎯
