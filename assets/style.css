@@ -528,3 +528,11 @@ input:checked + .slider {
 	display: flex;
 	justify-content: flex-end;
 }
+
+.widefat thead tr th {
+	background: #0D47A1;
+}
+
+#redirects-table th {
+	background: #0D47A1;
+}
