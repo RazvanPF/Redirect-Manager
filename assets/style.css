@@ -30,7 +30,7 @@
 
 #redirects-table thead {
     background: linear-gradient(to right, #1E88E5, #1565C0);
-    color: #fff;
+    color: #6e6e6e;
     font-weight: bold;
     text-transform: uppercase;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -381,7 +381,7 @@ body.admin_page_redirect-manager .error {
 
 #analytics-table-head {
     background: linear-gradient(to right, #1E88E5, #1565C0);
-    color: #fff;
+    color: #6e6e6e;
     font-weight: bold;
     text-transform: uppercase;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
