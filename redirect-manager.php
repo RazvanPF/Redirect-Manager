@@ -1,9 +1,10 @@
 <?php
 /*
 Plugin Name: Redirect Manager
-Description: Redirect URLs with or without query parameters, choose redirect types, check analytics, and more.
+Plugin URI: https://yourwebsite.com/
+Description: Lightweight redirect engine. Supports exact and regex-based redirects, query strings, custom redirect types, CSV import/export, and built-in analytics with hit tracking. No .htaccess edits required.
 Version: 1.3
-Author: Razvan Faraon
+Author: WEB RUNNER
 */
 
 if (!defined('ABSPATH')) {
