@@ -127,19 +127,6 @@ if (!class_exists('Redirect_Manager_Functions')) {
         }
     }
 
-    // Add the admin menu
-    add_action('admin_menu', function () {
-        add_menu_page(
-            'Redirect Manager',
-            'Redirect Manager',
-            'manage_options',
-            'redirect-manager',
-            'redirect_manager_render_admin_page',
-            'dashicons-admin-links',
-            99
-        );
-    });
-
     function redirect_manager_render_admin_page() {
         if (!current_user_can('manage_options')) {
             wp_die(__('Sorry, you are not allowed to access this page.', 'redirect-manager'));
@@ -153,6 +140,7 @@ if (!class_exists('Redirect_Manager_Functions')) {
             <h2 class="nav-tab-wrapper">
                 <a href="?page=redirect-manager&tab=general" class="nav-tab <?php echo $active_tab === 'general' ? 'nav-tab-active' : ''; ?>">General</a>
                 <a href="?page=redirect-manager&tab=analytics" class="nav-tab <?php echo $active_tab === 'analytics' ? 'nav-tab-active' : ''; ?>">Analytics</a>
+                <a href="?page=redirect-manager&tab=settings" class="nav-tab <?php echo $active_tab === 'settings' ? 'nav-tab-active' : ''; ?>">Settings</a>
             </h2>
             <?php if ($active_tab === 'general') : ?>
 			<!-- IMPORT & EXPORT BUTTONS HERE -->
@@ -270,7 +258,7 @@ if (!class_exists('Redirect_Manager_Functions')) {
 					<?php wp_nonce_field('redirect_manager_export_csv_nonce', 'redirect_manager_export_csv_nonce_field'); ?>
 					<input type="hidden" name="action" value="redirect_manager_export_csv">
 					<div class = "export-analytics">
-						<button type="submit" class="export-button">⤵ Export CSV</button>
+						<button type="submit" class="export-button">â¤µ Export CSV</button>
 					</div>
 				</form>
 
@@ -391,7 +379,7 @@ if (!class_exists('Redirect_Manager_Functions')) {
 							const urlParams = new URLSearchParams(window.location.search);
 
 							if (urlParams.get("refresh") === "1") {
-								console.log("🔄 Auto-refreshing after Save Changes...");
+								console.log("ðŸ”„ Auto-refreshing after Save Changes...");
 
 								// Remove the refresh=1 parameter to prevent infinite reloads
 								urlParams.delete("refresh");
@@ -403,6 +391,51 @@ if (!class_exists('Redirect_Manager_Functions')) {
 							}
 						});
 				</script>
+				
+				<?php elseif ($active_tab === 'settings') : ?>
+                    <div class="license-key-container">
+                        <label class="license-key-label">License Key</label>
+                        <input type="text" id="rm-license-key-input"
+                               placeholder="Enter your license key"
+                               value="<?php echo esc_attr(get_option('redirect_manager_license_key', '')); ?>" />
+                        <button type="button" id="rm-license-activate-btn" disabled>Activate License</button>
+                    </div>
+                
+                    <div id="rm-license-message"></div>
+                
+                    <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        const keyInput = document.getElementById("rm-license-key-input");
+                        const activateBtn = document.getElementById("rm-license-activate-btn");
+                        const messageBox = document.getElementById("rm-license-message");
+                
+                        keyInput.addEventListener("input", function () {
+                            activateBtn.disabled = keyInput.value.trim() === "";
+                        });
+                
+                        activateBtn.addEventListener("click", function () {
+                            const key = keyInput.value.trim();
+                            messageBox.innerHTML = "🔄 Verifying license...";
+                
+                            fetch(ajaxurl, {
+                                method: 'POST',
+                                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                                body: new URLSearchParams({
+                                    action: 'redirect_manager_activate_license',
+                                    license_key: key,
+                                    _ajax_nonce: '<?php echo wp_create_nonce("redirect_manager_license_nonce"); ?>'
+                                })
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                messageBox.innerHTML = data.message;
+                            })
+                            .catch(() => {
+                                messageBox.innerHTML = "❌ Something went wrong.";
+                            });
+                        });
+                    });
+                    </script>
             <?php endif; ?>
         </div>
         <?php

@@ -27,6 +27,12 @@ add_action('admin_enqueue_scripts', function ($hook_suffix) {
     }
 });
 
+// Register license key setting
+add_action('admin_init', function () {
+    register_setting('redirect_manager_settings', 'redirect_manager_license_key');
+});
+
+
 // Add settings link in the plugins list
 add_filter('plugin_action_links_' . plugin_basename(__FILE__), function ($links) {
     $settings_link = '<a href="options-general.php?page=redirect-manager">Settings</a>';
@@ -290,14 +296,40 @@ add_action('admin_head', function () {
     }
 });
 
-// Shows Redirect Manager in the Settings section of WP nav sidebar
-add_action('admin_menu', function () {
-    add_submenu_page(
-        'options-general.php', // Parent menu (Settings)
-        'Redirect Manager', // Page title
-        'Redirect Manager', // Menu title
-        'manage_options', // Capability (only admins can access)
-        'redirect-manager', // Slug (must match your existing page slug)
-        'redirect_manager_render_admin_page' // Callback function to render the page
+// Add Redirect Manager to the WP Admin Sidebar with Logo
+function rm_add_admin_menu() {
+    add_menu_page(
+        'Redirect Manager',                       // Page Title
+        'Redirect Manager',                       // Menu Title
+        'manage_options',                         // Capability
+        'redirect-manager',                       // Slug
+        'redirect_manager_render_admin_page',     // Callback Function
+        plugins_url('assets/rmlogo.png', __FILE__), // Icon Path
+        81                                        // Position (just under Settings)
     );
+
+    // Custom icon CSS
+    add_action('admin_head', function () {
+        echo '<style>
+            #toplevel_page_redirect-manager .wp-menu-image img {
+                width: 26px !important;
+                height: 26px !important;
+                margin-top: -5px !important;
+            }
+        </style>';
+    });
+}
+add_action('admin_menu', 'rm_add_admin_menu');
+
+add_action('wp_ajax_redirect_manager_activate_license', function () {
+    check_ajax_referer('redirect_manager_license_nonce');
+
+    $key = sanitize_text_field($_POST['license_key'] ?? '');
+
+    if (!$key) {
+        wp_send_json_error(['message' => '❌ License key is empty.']);
+    }
+
+    update_option('redirect_manager_license_key', $key);
+    wp_send_json_success(['message' => '✅ License activated and saved.']);
 });
