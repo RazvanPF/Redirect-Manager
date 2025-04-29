@@ -3,7 +3,7 @@
 Plugin Name: Redirect Manager
 Plugin URI: https://yourwebsite.com/
 Description: Lightweight redirect engine. Supports exact and regex-based redirects, query strings, custom redirect types, CSV import/export, and built-in analytics with hit tracking. No .htaccess edits required.
-Version: 1.3
+Version: 1.4
 Author: WEB RUNNER
 */
 
@@ -11,9 +11,51 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
 
+//CHECK LICENSE ACTIVE
+function is_redirect_manager_license_active() {
+    return get_transient('redirect_manager_license_status') === 'valid';
+}
+
 // Include necessary files
 require_once plugin_dir_path(__FILE__) . 'includes/admin-page.php';
+// Force license check before admin-page loads
+redirect_manager_check_license_status();
 require_once plugin_dir_path(__FILE__) . 'includes/redirect-functions.php';
+
+// Load the EDD Software Licensing Updater
+if (!class_exists('EDD_SL_Plugin_Updater')) {
+    require_once plugin_dir_path(__FILE__) . 'includes/EDD_SL_Plugin_Updater.php';
+}
+
+// LC + CACHE 
+add_action('admin_init', 'redirect_manager_check_license_status');
+
+function redirect_manager_check_license_status() {
+    if (!defined('REDIRECT_MANAGER_LICENSE_ACTIVE')) {
+        $license_key = get_option('redirect_manager_license_key', '');
+        $status = get_transient('redirect_manager_license_status');
+
+        if ($status === false && !empty($license_key)) {
+            $response = wp_remote_get(add_query_arg([
+                'edd_action' => 'check_license',
+                'license'    => $license_key,
+                'item_name'  => urlencode('Redirect Manager'),
+                'url'        => home_url()
+            ], 'https://web-runner.net'));
+
+            if (!is_wp_error($response)) {
+                $body = json_decode(wp_remote_retrieve_body($response));
+                if (isset($body->license)) {
+                    $status = ($body->license === 'valid') ? 'valid' : 'invalid';
+                    set_transient('redirect_manager_license_status', $status, DAY_IN_SECONDS);
+                }
+            }
+        }
+
+        define('REDIRECT_MANAGER_LICENSE_ACTIVE', $status === 'valid');
+    }
+}
+
 
 add_action('admin_enqueue_scripts', function ($hook_suffix) {
     // Load CSS for all admin pages
@@ -26,6 +68,10 @@ add_action('admin_enqueue_scripts', function ($hook_suffix) {
             'all'
         );
     }
+});
+
+add_action('admin_enqueue_scripts', function () {
+    wp_localize_script('jquery', 'ajaxurl', admin_url('admin-ajax.php'));
 });
 
 // Register license key setting
@@ -219,7 +265,7 @@ add_action('admin_post_redirect_manager_import_redirects', function () {
         }
 
         // Redirect with success flag
-        wp_redirect(admin_url('options-general.php?page=redirect-manager&tab=general&import_status=success'));
+        wp_redirect(admin_url('options-general.php?page=redirect-manager&tab=general&message=imported'));
         exit;
     } else {
         // Redirect with error flag
@@ -322,15 +368,94 @@ function rm_add_admin_menu() {
 }
 add_action('admin_menu', 'rm_add_admin_menu');
 
-add_action('wp_ajax_redirect_manager_activate_license', function () {
-    check_ajax_referer('redirect_manager_license_nonce');
+// LICENSE INIT
+add_action('wp_ajax_redirect_manager_activate_license', 'redirect_manager_activate_license');
+function redirect_manager_activate_license() {
+    check_ajax_referer('redirect_manager_license_nonce', '_ajax_nonce');
 
-    $key = sanitize_text_field($_POST['license_key'] ?? '');
+    $license_key = sanitize_text_field($_POST['license_key']);
+    $store_url   = 'https://web-runner.net';
+    $item_name   = urlencode('Redirect Manager');
 
-    if (!$key) {
-        wp_send_json_error(['message' => '❌ License key is empty.']);
+    $api_params = [
+        'edd_action' => 'activate_license',
+        'license'    => $license_key,
+        'item_name'  => $item_name,
+        'url'        => home_url()
+    ];
+
+    $response = wp_remote_get(add_query_arg($api_params, $store_url));
+
+    if (is_wp_error($response)) {
+        wp_send_json(['success' => false, 'data' => ['message' => '❌ Connection failed.']]);
     }
 
-    update_option('redirect_manager_license_key', $key);
-    wp_send_json_success(['message' => '✅ License activated and saved.']);
+    $license_data = json_decode(wp_remote_retrieve_body($response));
+
+    if ($license_data && $license_data->success) {
+        update_option('redirect_manager_license_key', $license_key);
+        update_option('redirect_manager_license_status', 'valid');
+        set_transient('redirect_manager_license_status', 'valid', DAY_IN_SECONDS); // 👈 THIS IS CRITICAL
+
+        wp_send_json([
+            'success' => true,
+            'data' => [
+                'message' => '✅ License activated and saved.'
+            ]
+        ]);
+    } else {
+        $error_msg = isset($license_data->error) ? ucfirst(str_replace('_', ' ', $license_data->error)) : 'Invalid license.';
+        wp_send_json([
+            'success' => false,
+            'data' => [
+                'message' => '❌ Activation failed: ' . esc_html($error_msg)
+            ]
+        ]);
+    }
+}
+//Deactivation hook
+add_action('wp_ajax_redirect_manager_deactivate_license', function () {
+  check_ajax_referer('redirect_manager_license_nonce');
+
+  $license_key = sanitize_text_field($_POST['license_key']);
+  $api_params = [
+    'edd_action' => 'deactivate_license',
+    'license'    => $license_key,
+    'item_name'  => urlencode('Redirect Manager'),
+    'url'        => home_url()
+  ];
+
+  $response = wp_remote_get(add_query_arg($api_params, 'https://web-runner.net'));
+
+  if (is_wp_error($response)) {
+    wp_send_json(['success' => false, 'message' => 'Error connecting to server.']);
+  }
+
+  $license_data = json_decode(wp_remote_retrieve_body($response));
+
+  if ($license_data && $license_data->license === 'deactivated') {
+    delete_option('redirect_manager_license_key');
+    delete_transient('redirect_manager_license_status');
+    wp_send_json(['success' => true, 'message' => '✅ License deactivated.']);
+  } else {
+    wp_send_json(['success' => false, 'message' => '❌ Deactivation failed.']);
+  }
+});
+
+
+add_action('admin_init', function() {
+    // Make sure the updater class exists
+    if (!class_exists('EDD_SL_Plugin_Updater')) {
+        return;
+    }
+
+    $license_key = trim(get_option('redirect_manager_license_key')); // pull license key
+
+    $edd_updater = new EDD_SL_Plugin_Updater('https://web-runner.net', __FILE__, array(
+        'version'   => '1.4', // match your current version in plugin header
+        'license'   => $license_key,
+        'item_name' => 'Redirect Manager', // Must match EXACT EDD product name
+        'author'    => 'Web Runner', // Nice touch
+        'url'       => home_url(), // Optional but clean
+    ));
 });

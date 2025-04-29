@@ -44,6 +44,8 @@ if (!class_exists('Redirect_Manager_Functions')) {
             } else {
                 delete_option('redirect_manager_redirects');
             }
+			wp_redirect(admin_url('options-general.php?page=redirect-manager&tab=general&message=saved'));
+			exit;
         }
 
         public function handle_redirects() {
