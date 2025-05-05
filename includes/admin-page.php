@@ -208,9 +208,10 @@ if (!class_exists('Redirect_Manager_Functions')) {
                             if (!empty($redirects)) {
                                 foreach ($redirects as $index => $redirect) {
                                     ?>
-                                    <tr>
-                                        <td><input type="text" name="redirects[<?php echo $index; ?>][from]" value="<?php echo esc_attr($redirect['from']); ?>" /></td>
-                                        <td><input type="text" name="redirects[<?php echo $index; ?>][to]" value="<?php echo esc_attr($redirect['to']); ?>" /></td>
+									<?php $readonly = !is_redirect_manager_license_active() ? 'readonly' : ''; ?>
+									<tr>
+										<td><input type="text" name="redirects[<?php echo $index; ?>][from]" value="<?php echo esc_attr($redirect['from']); ?>" <?php echo $readonly; ?> /></td>
+										<td><input type="text" name="redirects[<?php echo $index; ?>][to]" value="<?php echo esc_attr($redirect['to']); ?>" <?php echo $readonly; ?> /></td>
                                         <td>
                                             <select name="redirects[<?php echo $index; ?>][type]" class="redirect-type">
                                                 <option value="301" <?php selected($redirect['type'], 301); ?>>301</option>
